@@ -66,51 +66,73 @@ class _SearchPokemonCardState extends State<SearchPokemonCard> {
                   return Column(
                     children: [
                       Container(
-                        margin: const EdgeInsets.only(bottom: 20.0, top: 20.0, left: 50.0, right: 50.0),
+                        margin: const EdgeInsets.only(top: 20, bottom: 20),
+                        width: 350,
+                        // height: ,
+                        decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            border: Border.all(
+                              color: Colors.redAccent
+                            ),
+                            borderRadius: const BorderRadius.all(Radius.circular(10))
+                        ),
                         child: ListTile(
-                          title: CachedNetworkImage(
-                            imageUrl: pokemonCard.image,
-                            placeholder: (context, url) => const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) => const Icon(Icons.error),
-                          ),
-                          subtitle: Column(
-                            children: [
-                              Text(pokemonCard.name, style:const TextStyle(fontWeight: FontWeight.bold),),
-                              Text('HP : ${pokemonCard.hp}'),
-                              pokemonCard.niveau != null ? Text('Niveau: ${pokemonCard.niveau}') : const Text('Niveau inconnu'),
-                              pokemonCard.type != null ? Text('Type: ${pokemonCard.type}') : const Text('Type inconnu'),
-                              Container(
-                                margin: const EdgeInsets.only(top: 10.0),
-                                child: ElevatedButton(
-                                    onPressed: () async {
-                                      print(pokemonCard.name);
-                                      print(pokemonCard.hp);
-                                      print(pokemonCard.niveau);
-                                      print(pokemonCard.type);
-                                      print(pokemonCard.evolution);
-                                      final PokemonCard newPokemonCard = PokemonCard(
-                                          pokemonCard.name,
-                                          pokemonCard.hp,
-                                          pokemonCard.image,
-                                          pokemonCard.niveau,
-                                          pokemonCard.type,
-                                          pokemonCard.evolution
-                                      );
-                                      Navigator.of(context).pop(newPokemonCard);
-                                    },
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(20.0),
-                                      child: Text('Ajouter à ma wishlist'),
-                                    )
-                                ),
-                              )
-                            ],
-                          ),
+                            title: CachedNetworkImage(
+                              imageUrl: pokemonCard.image,
+                              placeholder: (context, url) => const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 15, bottom: 15, left: 10, right: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 100,
+                                        margin: const EdgeInsets.only(bottom: 10),
+                                        child: Text(pokemonCard.name, style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.redAccent)),
+                                      ),
+                                      Text('HP : ${pokemonCard.hp}', textAlign: TextAlign.start),
+                                      Text('Niveau : ${pokemonCard.niveau ?? 'inconnu'}', textAlign: TextAlign.start),
+                                      Text('Type : ${pokemonCard.type ?? 'inconnu'}',textAlign: TextAlign.start),
+                                      Text('Évolution : ${pokemonCard.evolution ?? 'inconnu'}', textAlign: TextAlign.start),
+
+                                    ],
+                                  ),
+                                  Container(
+                                      width: 150,
+                                      margin: const EdgeInsets.only(top: 10.0),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        onPressed: () async {
+                                          final PokemonCard newPokemonCard = PokemonCard(
+                                              pokemonCard.name,
+                                              pokemonCard.hp,
+                                              pokemonCard.image,
+                                              pokemonCard.niveau,
+                                              pokemonCard.type,
+                                              pokemonCard.evolution
+                                          );
+                                          Navigator.of(context).pop(newPokemonCard);
+                                        },
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(20.0),
+                                          child: Text('Ajouter à ma wishlist', textAlign: TextAlign.center, style: TextStyle(fontSize: 15),),
+                                        ),
+                                      )
+                                  )
+                                ],
+                              ),
+                            )
                         ),
                       ),
-                      const Divider(
-                        color: Colors.grey,
-                      )
                     ],
                   );
                 }),

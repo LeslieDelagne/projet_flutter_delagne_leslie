@@ -20,7 +20,6 @@ class Home extends StatelessWidget{
           ),
           Expanded(
             child: Container(
-              color: Colors.blue,
               child: Column(
                 children: [
                   Container(
@@ -29,7 +28,7 @@ class Home extends StatelessWidget{
                     child: const Padding(
                       padding: EdgeInsets.only(left: 10, right: 10, top: 10),
                       child: Text('Retrouve sur cette appli l\'ensemble des cartes pokemon, et ajoute celles qui te manque à ta wishlist ! ',
-                          style: TextStyle(fontSize: 20, color: Colors.white)),
+                          style: TextStyle(fontSize: 20)),
                     ),
                   ),
                   Container(

@@ -6,7 +6,7 @@ class PokemonCard {
   String image;
   String? niveau;
   String? type;
-  List? evolution;
+  String? evolution;
 
   @override
   String toString() {
@@ -22,9 +22,11 @@ class PokemonCard {
     final String image = json['images']['small'];
     final String? niveau = json['level'];
     final String? type = json['types'][0];
-    final List? evolution = json['evolvesTo'];
+    final List<dynamic> evolutionList = json['evolvesTo'] ?? [];
+    final String? evolution = evolutionList.isEmpty ? null : evolutionList[0];
 
-    // print(PokemonCard(name, hp, image, niveau, type!, evolution[]));
+
+    print(PokemonCard(name, hp, image, niveau, type!, evolution));
     return PokemonCard(name, hp, image, niveau, type, evolution);
   }
 
