@@ -42,7 +42,7 @@ class _SearchPokemonCardState extends State<SearchPokemonCard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Rchercher un Pokémon'),
+        title: const Text('Rechercher une carte Pokémon'),
       ),
       body: Column(
         children: [

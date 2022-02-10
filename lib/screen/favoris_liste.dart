@@ -18,7 +18,6 @@ class FavorisListe extends StatelessWidget {
       body: BlocBuilder<PokemonCardCubit, List<PokemonCard>>(
   builder: (context, state) {
     return ListView.builder(
-      // body: _pokemonCards.isEmpty ? const Text("Pas de cartes") : ListView.builder(
           itemCount: state.length,
           itemBuilder: (BuildContext context, int index) {
             PokemonCard pokemonCard = state[index];

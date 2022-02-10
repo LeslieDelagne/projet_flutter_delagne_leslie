@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projet_flutter_delagne_leslie/blocs/pokemon_card_cubit.dart';
+import 'package:projet_flutter_delagne_leslie/models/pokemon_card.dart';
 
 class Home extends StatelessWidget{
   const Home({Key? key}) : super(key: key);
@@ -40,6 +43,35 @@ class Home extends StatelessWidget{
                         child: Text('Voir mes favoris'),
                       )
                   ),
+                ),
+                Container(
+                  color: Colors.redAccent,
+                  height: 50,
+                  width: 500,
+                  margin: const EdgeInsets.only(top: 20, bottom: 30),
+                  child: const Center(child: Text('Apperçu des favoris', style: TextStyle(color: Colors.white, fontSize: 20),))
+                ),
+                BlocBuilder<PokemonCardCubit, List<PokemonCard>>(
+                    builder: (context, state) {
+                      return Expanded(
+                        child: GridView.builder(
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisSpacing: 0,
+                              mainAxisSpacing: 30,
+                              crossAxisCount: 3,
+                            ),
+                            itemCount: state.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            PokemonCard pokemonCard = state[index];
+                            return CachedNetworkImage(
+                              imageUrl: pokemonCard.image,
+                              placeholder: (context, url) => const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                            );
+                          },
+                        ),
+                      );
+                    }
                 )
               ],
             ),
