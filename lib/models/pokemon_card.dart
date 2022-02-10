@@ -25,8 +25,6 @@ class PokemonCard {
     final List<dynamic> evolutionList = json['evolvesTo'] ?? [];
     final String? evolution = evolutionList.isEmpty ? null : evolutionList[0];
 
-
-    print(PokemonCard(name, hp, image, niveau, type!, evolution));
     return PokemonCard(name, hp, image, niveau, type, evolution);
   }
 

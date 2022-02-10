@@ -1,14 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:projet_flutter_delagne_leslie/blocs/pokemon_card_cubit.dart';
 import 'package:projet_flutter_delagne_leslie/models/pokemon_card.dart';
 import 'package:projet_flutter_delagne_leslie/repository/favoris_repository.dart';
 import 'package:projet_flutter_delagne_leslie/repository/pokemon_card_repository.dart';
 import 'package:projet_flutter_delagne_leslie/repository/repository.dart';
+import 'package:provider/provider.dart';
 
 class SearchPokemonCard extends StatefulWidget {
   SearchPokemonCard({Key? key}) : super(key: key);
 
-  final Repository repository = Repository(PokemonCardRepository());
+  final Repository repository = Repository(PokemonCardRepository(), FavorisRepository());
   final FavorisRepository favorisRepository = FavorisRepository();
 
 
@@ -17,6 +19,7 @@ class SearchPokemonCard extends StatefulWidget {
 }
 
 class _SearchPokemonCardState extends State<SearchPokemonCard> {
+
   List<PokemonCard> _pokemonCards = [];
 
   final _textFieldController = TextEditingController();
@@ -45,6 +48,12 @@ class _SearchPokemonCardState extends State<SearchPokemonCard> {
         children: [
           TextFormField(
             controller: _textFieldController,
+            onFieldSubmitted: (_textFieldController) {
+              const snackBar = SnackBar(content: Text('Aucune carte trouvée'),);
+              if(_pokemonCards.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+            },
             decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.search),
                 labelText: 'Rechercher'
@@ -57,8 +66,9 @@ class _SearchPokemonCardState extends State<SearchPokemonCard> {
                 });
             },
           ),
-           _pokemonCards.isEmpty && _textFieldController.text.length > 1 ? const Text('Aucune carte trouvée')
-           : Expanded(
+           // _pokemonCards.isEmpty && _textFieldController.text.length > 1 ? const Text('Aucune carte trouvée')
+           // :
+           Expanded(
             child: ListView.builder(
                 itemCount: _pokemonCards.length,
                 itemBuilder: (context, index) {
@@ -120,11 +130,12 @@ class _SearchPokemonCardState extends State<SearchPokemonCard> {
                                               pokemonCard.type,
                                               pokemonCard.evolution
                                           );
+                                          Provider.of<PokemonCardCubit>(context, listen: false).addFavori(pokemonCard);
                                           Navigator.of(context).pop(newPokemonCard);
                                         },
                                         child: const Padding(
                                           padding: EdgeInsets.all(20.0),
-                                          child: Text('Ajouter à ma wishlist', textAlign: TextAlign.center, style: TextStyle(fontSize: 15),),
+                                          child: Text('Ajouter aux favoris', textAlign: TextAlign.center, style: TextStyle(fontSize: 15),),
                                         ),
                                       )
                                   )

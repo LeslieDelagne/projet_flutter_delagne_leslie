@@ -13,9 +13,9 @@ class PokemonCardRepository {
       final Map<String, dynamic> json = jsonDecode(response.body);
       if(json.containsKey("data")) {
         final List<dynamic> datas = json['data'];
-        datas.forEach((dataJson) {
+        for (var dataJson in datas) {
           cards.add(PokemonCard.fromCardJson(dataJson));
-        });
+        }
       }
       return cards;
     } else {

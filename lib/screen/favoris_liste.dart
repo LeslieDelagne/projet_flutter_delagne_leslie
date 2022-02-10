@@ -1,46 +1,27 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projet_flutter_delagne_leslie/blocs/pokemon_card_cubit.dart';
 import 'package:projet_flutter_delagne_leslie/models/pokemon_card.dart';
-import 'package:projet_flutter_delagne_leslie/repository/favoris_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
-class FavorisListe extends StatefulWidget {
-  FavorisListe({Key? key}) : super(key: key);
+class FavorisListe extends StatelessWidget {
 
-  final FavorisRepository favorisRepository = FavorisRepository();
-
-  @override
-  State<FavorisListe> createState() => _FavorisListeState();
-}
-
-class _FavorisListeState extends State<FavorisListe> {
-
-  List<PokemonCard> _pokemonCards = [];
-
-  @override
-  void initState() {
-    widget.favorisRepository.loadPokemonCards().then((pokemonCards) {
-      _setPokemonCards(pokemonCards);
-    });
-    super.initState();
-  }
-
-  void _setPokemonCards(List<PokemonCard> pokemonCards) {
-    setState(() {
-      _pokemonCards = pokemonCards;
-    });
-  }
+  const FavorisListe({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ma wishList'),
+        title: const Text('Mes favoris'),
       ),
-      body: _pokemonCards.isEmpty ? const Text("Pas de cartes") : ListView.builder(
-          itemCount: _pokemonCards.length,
-          itemBuilder: (context, index) {
-            final PokemonCard pokemonCard = _pokemonCards[index];
+      body: BlocBuilder<PokemonCardCubit, List<PokemonCard>>(
+  builder: (context, state) {
+    return ListView.builder(
+      // body: _pokemonCards.isEmpty ? const Text("Pas de cartes") : ListView.builder(
+          itemCount: state.length,
+          itemBuilder: (BuildContext context, int index) {
+            PokemonCard pokemonCard = state[index];
             return Column(
               children: [
                 Container(
@@ -81,56 +62,46 @@ class _FavorisListeState extends State<FavorisListe> {
                 ),
               ],
             );
-          }),
-      floatingActionButton: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton.extended(
+          });
+  },
+),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(right: 10),
+            child: FloatingActionButton(
               heroTag: 'btn_add',
               onPressed: () async {
-                final PokemonCard? pokemonCard = await Navigator.of(context).pushNamed('/searchPokemonCard') as PokemonCard?;
-                if(pokemonCard != null) {
-                  setState(() {
-                    _pokemonCards.add(pokemonCard);
-                  });
-                  widget.favorisRepository.savePokemonCards(_pokemonCards);
-
-                }
+                Navigator.of(context).pushNamed('/searchPokemonCard');
               },
-              icon: const Icon(Icons.add),
-              label: const Text('Ajouter une carte'),
+              child: const Icon(Icons.add),
             ),
-            FloatingActionButton.extended(
-              heroTag: 'btn_delete_all',
-              onPressed: () => showDialog<String>(
-                context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  title: const Text('Vider la wishlist ?'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, 'Cancel'),
-                      child: const Text('Annuler'),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        final wishlist = await SharedPreferences.getInstance();
-                        await wishlist.clear();
-                        setState(() {
-                          _pokemonCards = [];
-                        });
-                        Navigator.pop(context, 'Cancel');
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
+          ),
+          FloatingActionButton(
+            heroTag: 'btn_delete_all',
+            onPressed: () => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text('Vider les favoris ?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    child: const Text('Annuler'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      Provider.of<PokemonCardCubit>(context, listen: false).clearFavoris();
+                      Navigator.pop(context, 'Cancel');
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
               ),
-              label: Text('Vider la wishlist'),
-              icon: const Icon(Icons.delete),
             ),
-          ],
-        ),
+            child: const Icon(Icons.delete),
+          ),
+        ],
       )
     );
   }

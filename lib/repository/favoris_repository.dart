@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class FavorisRepository {
 
-  //Sauvegarder des cartes dans ma wishlist
+  //Sauvegarder des cartes dans mes favoris
   Future<void> savePokemonCards(List<PokemonCard> pokemonCards) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -16,7 +16,7 @@ class FavorisRepository {
   }
 
 
-  //Récupérer les cartes enregistrées dans ma wishlist
+  //Récupérer les cartes enregistrées dans mes favoris
   Future<List<PokemonCard>> loadPokemonCards() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final List<String>? list = prefs.getStringList('pokemonCards');
@@ -31,4 +31,5 @@ class FavorisRepository {
 
     return pokemonCards;
   }
+
 }
